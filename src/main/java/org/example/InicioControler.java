@@ -33,6 +33,10 @@ public class InicioControler {
 
                 pWriter.print(mensaje);
                 pWriter.flush();
+                String linea;
+                while((linea=bReader.readLine())!=null){
+                    System.out.println(linea);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
