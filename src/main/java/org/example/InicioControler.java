@@ -28,15 +28,9 @@ public class InicioControler {
                     BufferedReader bReader = new BufferedReader(isr);
                     PrintWriter pWriter = new PrintWriter(osw)) {
                 System.out.println("Enviando mensaje");
-
                 String mensaje = "mensaje desde el cliente";
-
                 pWriter.print(mensaje);
                 pWriter.flush();
-                String linea;
-                while((linea=bReader.readLine())!=null){
-                    System.out.println(linea);
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

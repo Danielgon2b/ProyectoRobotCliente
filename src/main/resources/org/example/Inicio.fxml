@@ -23,7 +23,7 @@
          </children></VBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Obtener conexion" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Obtener conexion" HBox.hgrow="ALWAYS" onAction="#establecerConexion" />
             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#salir" prefHeight="50.0" prefWidth="150.0" text="Salir" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
