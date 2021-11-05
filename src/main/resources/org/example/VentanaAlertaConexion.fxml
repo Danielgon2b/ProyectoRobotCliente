@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="550.0" minHeight="200.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.AlertaErrorControler">
+   <children>
+      <Label layoutX="25.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="500.0" text="Error" textOverrun="CLIP">
+         <padding>
+            <Insets left="20.0" />
+         </padding></Label>
+      <Button layoutX="80.0" layoutY="115.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cambiarInicio" prefHeight="50.0" prefWidth="150.0" text="Volver a conexiones" />
+      <Button layoutX="305.0" layoutY="115.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Salir de la aplicacion" />
+   </children>
+</AnchorPane>
