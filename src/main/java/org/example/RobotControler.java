@@ -3,6 +3,7 @@ package org.example;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.util.Duration;
 import org.example.entity.Instruccion;
 import org.example.utils.Constantes;
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RobotControler {
+public class RobotControler implements Initializable {
 
     private Timeline timeline;
 
