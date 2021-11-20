@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import org.example.entity.Instruccion;
@@ -13,7 +14,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class InicioControler {
+public class InicioControler implements Initializable {
 
 
     private SocketService socketService;
