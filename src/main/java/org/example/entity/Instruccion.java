@@ -74,7 +74,7 @@ public class Instruccion {
      * @return
      */
     public static boolean isInstruccion(String instruccion){
-        if(instruccion.matches("[a-z]+[:]+[a-z]")){
+        if(instruccion.matches("\\w+[:]+\\w")){
             return true;
         }
         return false;

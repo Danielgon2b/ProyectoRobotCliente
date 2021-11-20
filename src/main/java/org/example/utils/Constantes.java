@@ -9,4 +9,6 @@ public class Constantes {
     public static final String OK="OK";
     public static final String COMD = "COMD";
     public static final String CLOSE = "CLOSE";
+    public static final String ADDRS = "192.168.0.156";
+    public static final int PORT = 5555;
 }
