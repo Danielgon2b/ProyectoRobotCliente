@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.util.Duration;
 import org.example.entity.Instruccion;
+import org.example.service.SocketService;
 import org.example.utils.Constantes;
 
 import java.io.IOException;
@@ -18,15 +19,21 @@ public class RobotControler implements Initializable {
 
     private String movimiento;
 
+    private SocketService socketService;
 
+    public void setSocketService(SocketService socketService) {
+        this.socketService = socketService;
+    }
 
     @FXML
-    private void volver(){
+    private void volver() {
 
     }
 
     @FXML
-    private void salir(){
+    private void salir() {
+        Instruccion instruccion = new Instruccion(Constantes.CLOSE, "Cerrar");
+        this.socketService.sendInstruccion(instruccion);
         System.exit(0);
     }
 
@@ -36,12 +43,12 @@ public class RobotControler implements Initializable {
     }
 
     @FXML
-    private void caderaMas(){
+    private void caderaMas() {
         timeline.play();
-        movimiento="OG";
+        movimiento = "OG";
     }
 
-    private void moverBrazo(){
+    private void moverBrazo() {
         System.out.println(movimiento);
         if (!movimiento.equals("")) {
             Instruccion instruccion = new Instruccion();
@@ -51,16 +58,16 @@ public class RobotControler implements Initializable {
     }
 
     @FXML
-    private void nullMovimiento(){
+    private void nullMovimiento() {
 
-        movimiento="";
+        movimiento = "";
         timeline.stop();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        movimiento="";
+        movimiento = "";
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
             moverBrazo();
         }));
