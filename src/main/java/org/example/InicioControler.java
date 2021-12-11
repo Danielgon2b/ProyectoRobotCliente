@@ -1,5 +1,6 @@
 package org.example;
 
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,25 +11,28 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.example.entity.Instruccion;
 import org.example.service.SocketService;
 import org.example.utils.Constantes;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class InicioControler implements Initializable {
 
     private boolean live;
-
     private SocketService socketService;
-
     private Thread hiloLectura;
     private BufferedReader bufferedReader;
+    private Stage robotStage;
+    private TranslateTransition animationMenu;
+    private boolean menuDesplegado;
 
     @FXML
     private Button buttonSeleccionar;
@@ -36,14 +40,47 @@ public class InicioControler implements Initializable {
     @FXML
     private ChoiceBox<String> choiceBoxComs;
 
+    @FXML
+    private VBox vboxPrincipal;
+
+    @FXML
+    private VBox vboxMenu;
+
+    @FXML
+    private TextField textIp;
+
+    @FXML
+    private TextField textPuerto;
+
     public InicioControler() {
         this.live = true;
     }
 
+    public void setRobotStage(Stage robotStage) {
+        this.robotStage = robotStage;
+    }
+
+    @FXML
+    private void animacionMenu() {
+        if (menuDesplegado) {
+            animationMenu.setFromX(vboxMenu.getPrefWidth());
+            animationMenu.setToX(-5);
+            menuDesplegado = false;
+        } else {
+            animationMenu.setFromX(-5);
+            animationMenu.setToX(vboxMenu.getPrefWidth());
+            menuDesplegado = true;
+        }
+        animationMenu.play();
+    }
+
     @FXML
     private void establecerConexion() {
-        bufferedReader = socketService.initConnection();
-        hiloLectura.start();
+        guargarArchivo();
+        if (socketService.initConnection(textIp.getText(),Integer.parseInt(textPuerto.getText()))) {
+            this.bufferedReader = socketService.getBReader();
+            hiloLectura.start();
+        }
     }
 
     @FXML
@@ -55,6 +92,28 @@ public class InicioControler implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        vboxPrincipal.setStyle("-fx-background-color: #FFFFFF;");
+        animationMenu = new TranslateTransition(Duration.millis(100), vboxPrincipal);
+        animationMenu.setFromX(-5);
+        animationMenu.setToX(vboxMenu.getPrefWidth());
+        animationMenu.setCycleCount(1);
+        menuDesplegado = false;
+        File file = new File(Constantes.ADDRSFILE, Constantes.FILENAME);
+        if (file.exists()) {
+            try (FileReader fileReader = new FileReader(file);
+                 BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+                String texto = bufferedReader.readLine();
+                String[] strings = texto.split(Constantes.REGEX_DIV);
+                textIp.setText(strings[0]);
+                textPuerto.setText(strings[1]);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         socketService = new SocketService();
         hiloLectura = new Thread(new Runnable() {
             @Override
@@ -110,17 +169,38 @@ public class InicioControler implements Initializable {
         access();
     }
 
-    private Stage access() {
+    private void access() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Robot.fxml"));
         Stage stage = new Stage(StageStyle.DECORATED);
         try {
             stage.setScene(new Scene(loader.load()));
             RobotControler controler = loader.<RobotControler>getController();
             controler.setSocketService(this.socketService);
+            controler.setInicioStage(stage);
+            if (robotStage != null) {
+                robotStage.close();
+            }
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return stage;
+    }
+
+
+    private void guargarArchivo() {
+        File ruta = new File(Constantes.ADDRSFILE);
+        if (!ruta.exists()) {
+            ruta.mkdirs();
+        }
+        File file = new File(Constantes.ADDRSFILE, Constantes.FILENAME);
+        try (FileWriter fileWriter = new FileWriter(file);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            String texto = textIp.getText() + ";" + textPuerto.getText();
+            bufferedWriter.write(texto);
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

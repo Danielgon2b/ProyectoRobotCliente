@@ -11,5 +11,7 @@ public class Constantes {
     public static final String CLOSE = "CLOSE";
     public static final String ADDRS = "localhost";
     public static final int PORT = 5555;
+    public static final String ADDRSFILE = "C:\\Users\\danie\\OneDrive\\Documentos\\RobotController";
+    public static final String FILENAME = "conexion.config.txt";
 
 }

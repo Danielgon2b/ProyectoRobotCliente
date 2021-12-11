@@ -1,5 +1,6 @@
 package org.example.service;
 
+import javafx.scene.control.Alert;
 import org.example.entity.Instruccion;
 import org.example.utils.Constantes;
 
@@ -7,6 +8,7 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class SocketService {
 
@@ -16,21 +18,28 @@ public class SocketService {
     public SocketService() {
     }
 
-    public BufferedReader initConnection() {
+    public BufferedReader getBReader(){
+        return this.bReader;
+    }
+
+    public boolean initConnection(String addrs,int puerto) {
         Socket clientSocket = new Socket();
-
-        InetSocketAddress address = new InetSocketAddress(Constantes.ADDRS, Constantes.PORT);
-
+        InetSocketAddress address = new InetSocketAddress(addrs, puerto);
         try {
             clientSocket.connect(address);
             socketConnect(clientSocket);
-        } catch (ConnectException connectException) {
-            Instruccion instruccion = new Instruccion(Constantes.ERROR, "No se ha podido encontrar el servidor");
-            showAlert(instruccion);
+        } catch (SocketException socketException) {
+            Alert errorconexion = new Alert(Alert.AlertType.ERROR);
+            errorconexion.setTitle("Error Conexion");
+            errorconexion.setHeaderText(null);
+            errorconexion.setContentText("Se ha detectado un error durante la conexion. \nCompruebe:\n-El programa de servidor esta en ejecucion.\n-Si usted tiene conexion con la red del servidor \n-Si los valores de IP/Puertos son correctas");
+            errorconexion.show();
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-        return bReader;
+        return true;
     }
 
     private void socketConnect(Socket clientSocket) {
@@ -57,14 +66,6 @@ public class SocketService {
         printWriter.print(cadena);
         printWriter.flush();
 
-    }
-
-    public synchronized void showAlert(Instruccion instruccion) {
-        if (instruccion.getInstruccion().equals(Constantes.ERROR)) {
-
-        } else if (instruccion.getInstruccion().equals(Constantes.OK)) {
-
-        }
     }
 
     private void closeAll(Socket socket) {

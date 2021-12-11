@@ -3,7 +3,11 @@ package org.example;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.example.entity.Instruccion;
 import org.example.service.SocketService;
@@ -16,18 +20,33 @@ import java.util.ResourceBundle;
 public class RobotControler implements Initializable {
 
     private Timeline timeline;
-
     private String movimiento;
-
     private SocketService socketService;
+    private Stage inicioStage;
 
     public void setSocketService(SocketService socketService) {
         this.socketService = socketService;
     }
 
-    @FXML
-    private void volver() {
+    public void setInicioStage(Stage inicioStage){
+        this.inicioStage = inicioStage;
+    }
 
+    @FXML
+    private void logOut() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Inicio.fxml"));
+        Stage stage = new Stage(StageStyle.DECORATED);
+        try {
+            stage.setScene(new Scene(loader.load()));
+            InicioControler controler = loader.<InicioControler>getController();
+            controler.setRobotStage(stage);
+            if(inicioStage!=null){
+                inicioStage.close();
+            }
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -54,19 +73,18 @@ public class RobotControler implements Initializable {
             Instruccion instruccion = new Instruccion();
             instruccion.setInstruccion(Constantes.COMD);
             instruccion.setArgs(movimiento);
+            this.socketService.sendInstruccion(instruccion);
         }
     }
 
     @FXML
     private void nullMovimiento() {
-
         movimiento = "";
         timeline.stop();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         movimiento = "";
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
             moverBrazo();

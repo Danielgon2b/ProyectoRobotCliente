@@ -19,6 +19,9 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("Inicio"));
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> {
+           System.exit(0);
+        });
         stage.show();
     }
 
