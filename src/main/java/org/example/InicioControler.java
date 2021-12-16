@@ -2,6 +2,8 @@ package org.example;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -30,7 +33,6 @@ public class InicioControler implements Initializable {
     private SocketService socketService;
     private Thread hiloLectura;
     private BufferedReader bufferedReader;
-    private Stage robotStage;
     private TranslateTransition animationMenu;
     private boolean menuDesplegado;
 
@@ -44,7 +46,7 @@ public class InicioControler implements Initializable {
     private VBox vboxPrincipal;
 
     @FXML
-    private VBox vboxMenu;
+    private AnchorPane anchorPaneMenu;
 
     @FXML
     private TextField textIp;
@@ -56,19 +58,15 @@ public class InicioControler implements Initializable {
         this.live = true;
     }
 
-    public void setRobotStage(Stage robotStage) {
-        this.robotStage = robotStage;
-    }
-
     @FXML
     private void animacionMenu() {
         if (menuDesplegado) {
-            animationMenu.setFromX(vboxMenu.getPrefWidth());
-            animationMenu.setToX(-5);
+            animationMenu.setFromX(anchorPaneMenu.getMaxWidth());
+            animationMenu.setToX(0);
             menuDesplegado = false;
         } else {
-            animationMenu.setFromX(-5);
-            animationMenu.setToX(vboxMenu.getPrefWidth());
+            animationMenu.setFromX(0);
+            animationMenu.setToX(anchorPaneMenu.getMaxWidth());
             menuDesplegado = true;
         }
         animationMenu.play();
@@ -86,16 +84,25 @@ public class InicioControler implements Initializable {
     @FXML
     private void salir() {
         Instruccion instruccion = new Instruccion(Constantes.CLOSE);
-        socketService.sendInstruccion(instruccion);
+        if(socketService.isConnected()) {
+            socketService.sendInstruccion(instruccion);
+        }
         System.exit(0);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        vboxPrincipal.setStyle("-fx-background-color: #FFFFFF;");
+        textPuerto.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!newValue.matches("\\d*")){
+                    textPuerto.setText(newValue.replaceAll("[^\\d]",""));
+                }
+            }
+        });
         animationMenu = new TranslateTransition(Duration.millis(100), vboxPrincipal);
-        animationMenu.setFromX(-5);
-        animationMenu.setToX(vboxMenu.getPrefWidth());
+        animationMenu.setFromX(0);
+        animationMenu.setToX(anchorPaneMenu.getMaxWidth());
         animationMenu.setCycleCount(1);
         menuDesplegado = false;
         File file = new File(Constantes.ADDRSFILE, Constantes.FILENAME);
@@ -176,10 +183,12 @@ public class InicioControler implements Initializable {
             stage.setScene(new Scene(loader.load()));
             RobotControler controler = loader.<RobotControler>getController();
             controler.setSocketService(this.socketService);
-            controler.setInicioStage(stage);
-            if (robotStage != null) {
-                robotStage.close();
-            }
+            Stage thisStage =(Stage) vboxPrincipal.getScene().getWindow();
+            thisStage.close();
+            stage.setOnCloseRequest(event -> {
+                salir();
+                System.exit(0);
+            });
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

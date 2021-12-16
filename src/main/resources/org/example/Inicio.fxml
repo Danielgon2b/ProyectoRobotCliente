@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.InicioControler">
+<AnchorPane prefHeight="500.0" prefWidth="500.0" stylesheets="@../../styles/main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.InicioControler">
    <children>
-            <VBox fx:id="vboxMenu" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" />
-               </children>
-            </VBox>
-      <VBox fx:id="vboxPrincipal" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane id="menu" fx:id="anchorPaneMenu" maxWidth="100.0" stylesheets="@../../styles/main.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#salir" text="Salir" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+                </children>
+            </AnchorPane>
+      <VBox id="contenedor" fx:id="vboxPrincipal" stylesheets="@../../styles/main.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                <columnConstraints>
@@ -32,19 +32,37 @@
                           </rowConstraints>
                            <children>
                               <TextField fx:id="textIp" />
-                              <Label text="Label" GridPane.columnIndex="1" />
-                              <TextField fx:id="textPuerto" GridPane.rowIndex="1" />
-                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Direccion" GridPane.columnIndex="1">
+                                 <padding>
+                                    <Insets left="15.0" />
+                                 </padding></Label>
+                              <TextField fx:id="textPuerto" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin></TextField>
+                              <Label text="Puerto" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <padding>
+                                    <Insets left="15.0" />
+                                 </padding></Label>
                            </children>
                         </GridPane>
-                        <Button mnemonicParsing="false" onAction="#establecerConexion" text="Button" />
+                        <Button mnemonicParsing="false" onAction="#establecerConexion" text="Conectar">
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                      <children>
-                        <Label text="Label" />
-                        <ChoiceBox fx:id="choiceBoxComs" prefWidth="150.0" />
-                        <Button fx:id="buttonSeleccionar" mnemonicParsing="false" text="Button" />
+                        <Label text="Puerto Serie" />
+                        <ChoiceBox fx:id="choiceBoxComs" disable="true" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin></ChoiceBox>
+                        <Button fx:id="buttonSeleccionar" disable="true" mnemonicParsing="false" onAction="#setPuerto" text="Seleccionar puerto">
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                </children>
@@ -52,13 +70,11 @@
                   <RowConstraints maxHeight="1.7976931348623157E308" vgrow="ALWAYS" />
                </rowConstraints>
             </GridPane>
-            <HBox alignment="BOTTOM_RIGHT">
-               <children>
-                  <Label alignment="BOTTOM_CENTER" text="Label" />
-               </children>
-            </HBox>
+            <Button fx:id="buttonMenu" alignment="BOTTOM_LEFT" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#animacionMenu" text="Menu" />
          </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
       </VBox>
-      <Button mnemonicParsing="false" onAction="#animacionMenu" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
    </children>
 </AnchorPane>

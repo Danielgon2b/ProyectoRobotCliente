@@ -14,8 +14,14 @@ public class SocketService {
 
     private PrintWriter printWriter;
     private BufferedReader bReader;
+    private boolean connected;
 
     public SocketService() {
+        connected=false;
+    }
+
+    public boolean isConnected(){
+        return connected;
     }
 
     public BufferedReader getBReader(){
@@ -50,6 +56,7 @@ public class SocketService {
             OutputStreamWriter osw = new OutputStreamWriter(os);
             bReader = new BufferedReader(isr);
             printWriter = new PrintWriter(osw);
+            this.connected=true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +72,6 @@ public class SocketService {
         }
         printWriter.print(cadena);
         printWriter.flush();
-
     }
 
     private void closeAll(Socket socket) {
